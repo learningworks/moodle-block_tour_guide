@@ -1,0 +1,60 @@
+/**
+ * Moodle Plugin
+ *
+ * styles
+ *
+ * @package    block
+ * @subpackage tour_guide
+ * @copyright  2014 Thomas Threadgold, LearningWorks Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+.tour_highlight {
+  outline: 5px solid rgba(255, 0, 0, 0.6);
+}
+
+.tour_box_popup {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	outline: none;
+	padding: 1em 2em;
+	background: #fff;
+	min-width: 200px;
+	max-width: 300px;
+	border: 1px solid #aaa;
+	box-shadow: 0 0 10px 0px rgba(0,0,0,0.5);
+	transform: translate(-50%, -50%);
+}
+
+input[type="button"].tour_guide_trigger {
+	width: 100%;
+	margin: 0;
+}
+
+input[type="button"].tour_guide_next_button,
+input[type="button"].tour_guide_finish_button {
+	float: right;
+	margin: 0;
+}
+
+input[type="button"].tour_guide_prev_button {
+	float: left;
+	margin: 0;
+}
+
+.block.block_tour_guide .content{
+	padding-bottom: 0;	
+}
+
+.block.block_tour_guide .footer {
+	margin: 0;
+	padding: 0;
+}
+
+.tour_guide_navigation {
+	overflow: hidden;
+	padding-top: 0.5em;
+	margin-top: 0.5em;
+	border-top: 1px solid #ccc;
+}
+
