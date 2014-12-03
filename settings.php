@@ -39,7 +39,7 @@ if ($hassiteconfig) {
             'block_tour_guide/highlight_colour',
             get_string('highlight_colour', 'block_tour_guide'),
             get_string('highlight_colour_desc', 'block_tour_guide'),
-            '#FE6565',
+            '',
             array(
                 'selector'=>'html',
                 'style'=>'backgroundColor'
