@@ -40,52 +40,79 @@ class block_tour_guide extends block_base {
         }
      
         // Output the content of the block.
-        $this->content         =  new stdClass;
-        $this->content->text   = '<input type="button" class="tour_guide_trigger" value="' . $this->config->button . '">';
+        $this->content = new stdClass;
+
+        // Get the text for the tour guide button.
+        if (isset($this->config->button)) {
+            $this->content->text = '<input type="button" class="tour_guide_trigger" value="' . $this->config->button . '">';
+        } else {      
+            $this->content->text = '<input type="button" class="tour_guide_trigger" value="' . get_string('blockbutton_text', 'block_tour_guide') . '">';
+        }
 
         // Output a JS Array with the block instance settings.
         $this->content->footer = '<script type="text/javascript">var tour_guide_content = [';
 
-        // Loop through all the object settings.
-        for ($i = 1; $i <= (int) $this->config->tip_count; $i++) {
+        // Set tipcount to zero if it is not defined. There are no tips.
+        if (isset($this->config->tip_count)) {
 
-            // Add the selector.
-            // If no selector exists, then use HTML by default.
-            $selector = 'tip_' . $i . '_selector';
-            if(0 < strlen($this->config->$selector) ) {
-                $theSelector = $this->config->$selector;
-            } else {
-                $theSelector = 'html';
+            // Loop through all the object settings.
+            for ($i = 1; $i <= (int) $this->config->tip_count; $i++) {
+
+                $selector = 'tip_' . $i . '_selector';
+
+                // Check that the selector has been set.
+                if (!isset($this->config->$selector)) {
+                    break;
+                }
+
+                if(strlen($this->config->$selector) > 0) {
+                    $theSelector = $this->config->$selector;
+                } else {
+                    $theSelector = 'html';
+                }
+
+                // Add the content.
+                $content = 'tip_' . $i . '_content';
+                $the_content = $this->config->$content;
+
+                // Output the settings as a JS Object.
+                $this->content->footer .= '
+                {
+                    "selector" : "' . $theSelector . '",
+                    "content" : "' . $the_content['text'] .'"';
+
+                if( $i !== (int) $this->config->tip_count) {
+                    $this->content->footer .= '
+                },';
+                } else {
+                    $this->content->footer .= '
+                }';
+                }
             }
 
-            // Add the content.
-            $content = 'tip_' . $i . '_content';
-            $the_content = $this->config->$content;
 
-            // Output the settings as a JS Object.
-            $this->content->footer .= '
-            {
-                "selector" : "' . $theSelector . '",
-                "content" : "' . $the_content['text'] .'"';
-
-            if( $i !== (int) $this->config->tip_count) {
-                $this->content->footer .= '
-            },';
-            } else {
-                $this->content->footer .= '
-            }';
-            }
         }
+        
+        $this->content->footer .= "];";
 
-        $this->content->footer .= "];</script>";
+        $highlight_colour = get_config('block_tour_guide', 'highlight_colour');
+
+        if (empty($highlight_colour)) {
+            $this->content->footer .= "var tour_guide_highlight_color = false;";
+        }
+        else {
+            $this->content->footer .= "var tour_guide_highlight_color = '" . $highlight_colour . "';";
+        }
+        
+        $this->content->footer .= "</script>";
      
         return $this->content;
     }
 
-    // Enable global block settings.
-    // function has_config() {
-    //     return true;
-    // }
+    //Enable global block settings.
+    function has_config() {
+        return true;
+    }
 
     // Hide the block header.
     public function hide_header() {

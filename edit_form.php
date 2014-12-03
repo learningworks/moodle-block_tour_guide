@@ -87,13 +87,20 @@ class block_tour_guide_edit_form extends block_edit_form {
                 20 => '20'
             ),
             array(
-                'class' => ''
+                'class' => '',
             )
         );
 
         // Loop through tips and output settings.
         $tipcount = get_config('config_tip_count', 'block_tour_guide');
-        $tipcount = (int) $blockinstance->config->tip_count;
+
+        if (isset($blockinstance->config->tip_count)) {
+            $tipcount = (int) $blockinstance->config->tip_count;
+        }
+        else {
+            $tipcount = 1;
+        }
+
         for ($i = 1; $i <= $tipcount; $i++) {
 
             // Add the tip selector field.
@@ -123,15 +130,45 @@ class block_tour_guide_edit_form extends block_edit_form {
             );
 
             // Set the type, default, and rules for the content and selector fields.
-            $mform->setType('config_tip_' . $i . '_content', PARAM_RAW);
-            $mform->setDefault('config_tip_' . $i . '_content', get_string('tip_content_default', 'block_tour_guide'));
-            $mform->addRule('config_tip_' . $i . '_content', get_string('error', 'block_tour_guide'), 'required');
-
             $mform->setType('config_tip_' . $i . '_selector', PARAM_RAW);
             $mform->setDefault('config_tip_' . $i . '_selector', get_string('tip_selector_default', 'block_tour_guide'));
             $mform->addRule('config_tip_' . $i . '_selector', get_string('error', 'block_tour_guide'), 'required');
 
+            $mform->setType('config_tip_' . $i . '_content', PARAM_RAW);
+            $mform->setDefault('config_tip_' . $i . '_content', get_string('tip_content_default', 'block_tour_guide'));
+            $mform->addRule('config_tip_' . $i . '_content', get_string('error', 'block_tour_guide'), 'required');
         }
  
     }
+
+    // function set_data($defaults) {
+    //     if (!empty($this->block->config) && is_object($this->block->config)) {
+    //         $text = $this->block->config->text;
+    //         $draftid_editor = file_get_submitted_draft_itemid('config_text');
+    //         if (empty($text)) {
+    //             $currenttext = '';
+    //         } else {
+    //             $currenttext = $text;
+    //         }
+    //         $defaults->config_text['text'] = file_prepare_draft_area($draftid_editor, $this->block->context->id, 'block_html', 'content', 0, array('subdirs'=>true), $currenttext);
+    //         $defaults->config_text['itemid'] = $draftid_editor;
+    //         $defaults->config_text['format'] = $this->block->config->format;
+    //     } else {
+    //         $text = get_string('tip_content_default', 'block_tour_guide');
+    //     }
+
+    //     // have to delete text here, otherwise parent::set_data will empty content
+    //     // of editor
+    //     unset($this->block->config->text);
+    //     parent::set_data($defaults);
+    //     // restore $text
+    //     if (!isset($this->block->config)) {
+    //         $this->block->config = new stdClass();
+    //     }
+    //     $this->block->config->text = $text;
+    //     if (isset($title)) {
+    //         // Reset the preserved title
+    //         $this->block->config->title = $title;
+    //     }
+    // }
 }

@@ -25,6 +25,14 @@ jQuery(document).ready(function($) {
 		displayTourBox(tip_index);
 	});
 
+	// Reload the config page on tip number change.
+	$('select#id_config_tip_count').change(function() {
+		alert("You are about to be redirected. To edit the tips for the Tour Guide block, you must navigate back to this page.");
+		// Change the urls get information.
+		$("input#id_submitbutton").click();
+	});
+
+
 	function showNextTourBox() {
 		// INCREASE INDEX.
 		tip_index++;
@@ -52,6 +60,7 @@ jQuery(document).ready(function($) {
 		// IF PREV INDEX HAS BEEN SET, THEN REMOVE OLD TOUR BOX.
 		if(prev_index !== false) {
 			$(tour_guide_content[prev_index].selector).removeClass('tour_highlight');
+			$(tour_guide_content[prev_index].selector).removeAttr('style' );
 			$('#tour_box_' + prev_index).remove();
 		}
 
@@ -70,6 +79,12 @@ jQuery(document).ready(function($) {
 
 		// HIGHLIGHT THE TARGET AND SHOW TOUR BOX.
 		$(tour_guide_content[tip_index].selector).addClass('tour_highlight');
+		
+		// If a specific highlight color is specified
+		if (tour_guide_highlight_color != false) {
+			$(tour_guide_content[tip_index].selector).css('outline-color', tour_guide_highlight_color);
+		}
+
 		$('body').append(html);
 
 		// SMOOTH SCROLL TO THE TARGET.
