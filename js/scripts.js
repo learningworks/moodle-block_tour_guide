@@ -36,13 +36,23 @@ jQuery(document).ready(function($) {
 	function showNextTourBox() {
 		// INCREASE INDEX.
 		tip_index++;
-		displayTourBox(tip_index);
+
+		// Skip to the next item if no object is found.
+		if (!displayTourBox(tip_index)) {
+			tip_index++;
+			displayTourBox(tip_index)
+		}
 	}
 
 	function showPrevTourBox() {
 		// DECREASE INDEX.
 		tip_index--;
-		displayTourBox(tip_index);
+
+		// Skip to the previous item if no object is found.
+		if (!displayTourBox(tip_index)) {
+			tip_index--;
+			displayTourBox(tip_index)
+		}
 	}
 
 	function endTour() {
@@ -56,6 +66,11 @@ jQuery(document).ready(function($) {
 
 	function displayTourBox(index) {
 		var html = '';
+
+		// If no object is found, return an indicator.
+		if ($(tour_guide_content[tip_index].selector).length <= 0) {
+			return false;
+		}
 
 		// IF PREV INDEX HAS BEEN SET, THEN REMOVE OLD TOUR BOX.
 		if(prev_index !== false) {
@@ -100,5 +115,4 @@ jQuery(document).ready(function($) {
 	 	$('.tour_guide_next_button').on('click', showNextTourBox);
 	 	$('.tour_guide_finish_button').on('click', endTour);
 	}
-
 });
