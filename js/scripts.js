@@ -155,19 +155,6 @@ jQuery(document).ready(function($) {
 		html += '</div></div>';
 
 
-		// SET UP HTML BASED ON INDEX POSITION.
-		// if( tip_index === 0 ) {
-		// 	if( tour_guide_content.length !== 1 ) { // First tip and there is more than one tip.
-		// 		html = '<div id="tour_box_' + tip_index + '" class="tour_box_popup">' + tour_guide_content[tip_index].content + '<div class="tour_guide_navigation"><input type="button" class="tour_guide_next_button" value="Next"></div></div>';
-		// 	} else { // First tip and there is only one tip.
-		// 		html = '<div id="tour_box_' + tip_index + '" class="tour_box_popup">' + tour_guide_content[tip_index].content + '<div class="tour_guide_navigation"><input type="button" class="tour_guide_finish_button" value="Finish"></div></div>';
-		// 	}
-		// } else if(tip_index === tour_guide_content.length - 1 ||) { // Not first tip and the next tip is the last tip.
-		// 	html = '<div id="tour_box_' + tip_index + '" class="tour_box_popup">' + tour_guide_content[tip_index].content + '<div class="tour_guide_navigation"><input type="button" class="tour_guide_prev_button" value="Previous"><input type="button" class="tour_guide_finish_button" value="Finish"></div></div>'; //
-		// } else { // Not first tip and the next tip is NOT the last tip.
-		// 	html = '<div id="tour_box_' + tip_index + '" class="tour_box_popup">' + tour_guide_content[tip_index].content + '<div class="tour_guide_navigation"><input type="button" class="tour_guide_prev_button" value="Previous"><input type="button" class="tour_guide_next_button" value="Next"></div></div>';
-		// }
-
 		// HIGHLIGHT THE TARGET AND SHOW TOUR BOX.
 		$(tour_guide_content[tip_index].selector).addClass('tour_highlight');
 		
@@ -181,7 +168,7 @@ jQuery(document).ready(function($) {
 
 		// SMOOTH SCROLL TO THE TARGET.
 	 	$('html,body').animate({
-		    scrollTop: $(tour_guide_content[tip_index].selector).offset().top
+		    scrollTop: $(tour_guide_content[tip_index].selector).offset().top - 10
 		}, 300);
 
 	 	// SET PREVIOUS INDEX TO THE ONE JUST USED.
