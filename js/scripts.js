@@ -21,8 +21,25 @@ jQuery(document).ready(function($) {
 		// ENSURE INDEX IS SET TO 0.
 		tip_index = 0;
 
-		// SHOW FIRST TOUR BOX.
-		displayTourBox(tip_index);
+		// Check that there is atleast one tip.
+		var isTip = false;
+		for (var i = 0; i < tour_guide_content.length; i++) {
+			if ($(tour_guide_content[i].selector).length > 0) {
+				isTip = true;
+			}
+		}
+
+		// If there are no tips to display.
+		if (!isTip) {
+			alert("There are no tips to be displayed for the tour.");
+		}
+		else {
+			// SHOW FIRST TOUR BOX.
+			if (!displayTourBox()) {
+				showNextTourBox();
+			}
+		}
+
 	});
 
 	// Reload the config page on tip number change.
@@ -34,13 +51,14 @@ jQuery(document).ready(function($) {
 
 
 	function showNextTourBox() {
-		// INCREASE INDEX.
+		// INCREASE INDEX. 
 		tip_index++;
 
 		// Skip to the next item if no object is found.
-		if (!displayTourBox(tip_index)) {
-			tip_index++;
-			displayTourBox(tip_index)
+		if (!displayTourBox()) {
+			return showNextTourBox();
+		} else {
+			return true; // If the first call of displayTourBox() is successful.
 		}
 	}
 
@@ -49,9 +67,8 @@ jQuery(document).ready(function($) {
 		tip_index--;
 
 		// Skip to the previous item if no object is found.
-		if (!displayTourBox(tip_index)) {
-			tip_index--;
-			displayTourBox(tip_index)
+		if (!displayTourBox()) {
+			showPrevTourBox();
 		}
 	}
 
@@ -64,8 +81,46 @@ jQuery(document).ready(function($) {
 		tip_index = 0;		
 	}
 
-	function displayTourBox(index) {
+	function nextSelectorExists(tmp_tip_index) {
+		tmp_tip_index++;
+
+		// If the tip_index has exceeded the number of tips, return false.
+		if (tour_guide_content.length <= tmp_tip_index) {
+			return false;
+		}
+		// If the next selector is on the page, return true.
+		else if (0 < $(tour_guide_content[tmp_tip_index].selector).length) {
+			return true;
+		}
+		// Tip not found. Checks the next index recursively.
+		else
+		{
+			return nextSelectorExists(tmp_tip_index);
+		}
+	}
+
+	function prevSelectorExists(tmp_tip_index) {
+		tmp_tip_index--;
+
+		// If the tip_index is less than zero, return false.
+		if (tmp_tip_index < 0) {
+			return false;
+		}
+		// If the previous selector is on the page, return true.
+		else if ($(tour_guide_content[tmp_tip_index].selector).length > 0) {
+			return true;
+		}
+		// Tip not found. Checks the previous index recursively.
+		else
+		{
+			return prevSelectorExists(tmp_tip_index);
+		}
+	}
+
+	function displayTourBox() {
 		var html = '';
+
+		// tip_index < 0 || tip_index > tour_guide_content.length -1 || 
 
 		// If no object is found, return an indicator.
 		if ($(tour_guide_content[tip_index].selector).length <= 0) {
@@ -80,17 +135,38 @@ jQuery(document).ready(function($) {
 		}
 
 		// SET UP HTML BASED ON INDEX POSITION.
-		if( tip_index === 0 ) {
-			if( tour_guide_content.length !== 1 ) {
-				html = '<div id="tour_box_' + tip_index + '" class="tour_box_popup">' + tour_guide_content[tip_index].content + '<div class="tour_guide_navigation"><input type="button" class="tour_guide_next_button" value="Next"></div></div>';
-			} else {
-				html = '<div id="tour_box_' + tip_index + '" class="tour_box_popup">' + tour_guide_content[tip_index].content + '<div class="tour_guide_navigation"><input type="button" class="tour_guide_finish_button" value="Finish"></div></div>';
-			}
-		} else if(tip_index === tour_guide_content.length - 1) {
-			html = '<div id="tour_box_' + tip_index + '" class="tour_box_popup">' + tour_guide_content[tip_index].content + '<div class="tour_guide_navigation"><input type="button" class="tour_guide_prev_button" value="Previous"><input type="button" class="tour_guide_finish_button" value="Finish"></div></div>';
-		} else {
-			html = '<div id="tour_box_' + tip_index + '" class="tour_box_popup">' + tour_guide_content[tip_index].content + '<div class="tour_guide_navigation"><input type="button" class="tour_guide_prev_button" value="Previous"><input type="button" class="tour_guide_next_button" value="Next"></div></div>';
+		html += '<div id="tour_box_' + tip_index + '" class="tour_box_popup">';
+
+		html += tour_guide_content[tip_index].content;
+
+		html += '<div class="tour_guide_navigation">';
+
+		if (prevSelectorExists(tip_index)) {
+			html += '<input type="button" class="tour_guide_prev_button" value="Previous">';
 		}
+
+		if (nextSelectorExists(tip_index)) {
+			html += '<input type="button" class="tour_guide_next_button" value="Next"></div></div>';
+		}
+		else {
+			html += '<input type="button" class="tour_guide_finish_button" value="Finish">';
+		}
+
+		html += '</div></div>';
+
+
+		// SET UP HTML BASED ON INDEX POSITION.
+		// if( tip_index === 0 ) {
+		// 	if( tour_guide_content.length !== 1 ) { // First tip and there is more than one tip.
+		// 		html = '<div id="tour_box_' + tip_index + '" class="tour_box_popup">' + tour_guide_content[tip_index].content + '<div class="tour_guide_navigation"><input type="button" class="tour_guide_next_button" value="Next"></div></div>';
+		// 	} else { // First tip and there is only one tip.
+		// 		html = '<div id="tour_box_' + tip_index + '" class="tour_box_popup">' + tour_guide_content[tip_index].content + '<div class="tour_guide_navigation"><input type="button" class="tour_guide_finish_button" value="Finish"></div></div>';
+		// 	}
+		// } else if(tip_index === tour_guide_content.length - 1 ||) { // Not first tip and the next tip is the last tip.
+		// 	html = '<div id="tour_box_' + tip_index + '" class="tour_box_popup">' + tour_guide_content[tip_index].content + '<div class="tour_guide_navigation"><input type="button" class="tour_guide_prev_button" value="Previous"><input type="button" class="tour_guide_finish_button" value="Finish"></div></div>'; //
+		// } else { // Not first tip and the next tip is NOT the last tip.
+		// 	html = '<div id="tour_box_' + tip_index + '" class="tour_box_popup">' + tour_guide_content[tip_index].content + '<div class="tour_guide_navigation"><input type="button" class="tour_guide_prev_button" value="Previous"><input type="button" class="tour_guide_next_button" value="Next"></div></div>';
+		// }
 
 		// HIGHLIGHT THE TARGET AND SHOW TOUR BOX.
 		$(tour_guide_content[tip_index].selector).addClass('tour_highlight');
@@ -100,6 +176,7 @@ jQuery(document).ready(function($) {
 			$(tour_guide_content[tip_index].selector).css('outline-color', tour_guide_highlight_color);
 		}
 
+		console.log(html);
 		$('body').append(html);
 
 		// SMOOTH SCROLL TO THE TARGET.
@@ -114,5 +191,7 @@ jQuery(document).ready(function($) {
 	 	$('.tour_guide_prev_button').on('click', showPrevTourBox);
 	 	$('.tour_guide_next_button').on('click', showNextTourBox);
 	 	$('.tour_guide_finish_button').on('click', endTour);
+
+	 	return true;
 	}
 });
