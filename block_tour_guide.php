@@ -44,9 +44,9 @@ class block_tour_guide extends block_base {
 
         // Get the text for the tour guide button.
         if (isset($this->config->button)) {
-            $this->content->text = '<input type="button" class="tour_guide_trigger" value="' . $this->config->button . '">';
+            $this->content->text = '<input type="button" class="tour_guide_trigger" value=' . json_encode($this->config->button) . '>';
         } else {      
-            $this->content->text = '<input type="button" class="tour_guide_trigger" value="' . get_string('blockbutton_text', 'block_tour_guide') . '">';
+            $this->content->text = '<input type="button" class="tour_guide_trigger" value=' . json_encode(get_string('blockbutton_text', 'block_tour_guide')) . '>';
         }
 
         // Output a JS Array with the block instance settings.
@@ -78,8 +78,8 @@ class block_tour_guide extends block_base {
                 // Output the settings as a JS Object.
                 $this->content->footer .= '
                 {
-                    "selector" : "' . $theSelector . '",
-                    "content" : "' . $the_content['text'] .'"';
+                    "selector" : ' . json_encode($theSelector) . ',
+                    "content" : ' . json_encode($the_content['text']);
 
                 if( $i !== (int) $this->config->tip_count) {
                     $this->content->footer .= '
@@ -101,7 +101,7 @@ class block_tour_guide extends block_base {
             $this->content->footer .= "var tour_guide_highlight_color = false;";
         }
         else {
-            $this->content->footer .= "var tour_guide_highlight_color = '" . $highlight_colour . "';";
+            $this->content->footer .= "var tour_guide_highlight_color = " . json_encode($highlight_colour) . ";";
         }
         
         $this->content->footer .= "</script>";

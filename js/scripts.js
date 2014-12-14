@@ -163,8 +163,12 @@ jQuery(document).ready(function($) {
 			$(tour_guide_content[tip_index].selector).css('outline-color', tour_guide_highlight_color);
 		}
 
-		console.log(html);
-		$('body').append(html);
+		if( $('body').hasClass('ie') ) {
+			$(html).appendTo('body');
+		} else {
+			$('body').append(html);
+		}
+		
 
 		// SMOOTH SCROLL TO THE TARGET.
 	 	$('html,body').animate({

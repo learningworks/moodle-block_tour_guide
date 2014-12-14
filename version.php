@@ -25,7 +25,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version  = 2014121104;
+$plugin->version  = 2014121500;
 $plugin->requires = 2014051200;
 $plugin->component = 'block_tour_guide';
 $plugin->maturity = MATURITY_STABLE;
